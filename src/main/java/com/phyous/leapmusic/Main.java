@@ -27,42 +27,19 @@ public class Main {
 //
 //    // Remove the sample listener when done
 //    controller.removeListener(listener);
-    playNote();
+    playNotes();
   }
 
-  private static void playNote(){
-    int nChannelNumber = 0; // (0 -15)
-    int	nNoteNumber = 50;	// MIDI key number (0-127)
-    int	nVelocity = 127; // (0-127)
-    int	nDuration = 1000; // in ms
+  private static void playNotes(){
+    Piano p = PianoSingleton.getInstance();
+    for(int i = 0; i < 20; i++) {
+      p.playNote(50+i, 127, 1000);
+      try {
+       Thread.sleep(100);
+      }  catch (InterruptedException e) {
 
-
-    Synthesizer synth = null;
-    try {
-      synth = MidiSystem.getSynthesizer();
-    } catch (MidiUnavailableException e) {
-      e.printStackTrace();
-      System.exit(1);
+      }
     }
-
-    try {
-      synth.open();
-    } catch (MidiUnavailableException e) {
-      e.printStackTrace();
-      System.exit(1);
-    }
-
-    MidiChannel[] channels = synth.getChannels();
-    MidiChannel channel = channels[nChannelNumber];
-    channel.noteOn(nNoteNumber, nVelocity);
-
-
-    try {
-      Thread.sleep(nDuration);
-    } catch (InterruptedException e) {
-    }
-
-    channel.noteOff(nNoteNumber);
-    synth.close();
+    p.closePiano();
   }
 }
